@@ -1,6 +1,6 @@
 import { renderMovies, renderWatchlist } from './render.js'
 import searchMovie from './fetch.js'
-import { handleAddMovieClick, handleRemoveMovieClick } from './buttons.js'
+
 
 // Funktion för att söka efter filmer baserat på användarens inmatning.
 function searchMovie(e) {
