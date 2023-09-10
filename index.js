@@ -41,9 +41,13 @@ function handleRemoveMovieClick(removeMovieId) {
     if (movieIndexToRemove !== -1) {
         addedFilmArray.splice(movieIndexToRemove, 1)
         localStorage.setItem("myMovies", JSON.stringify(addedFilmArray))
-        location.reload()
-        renderMovies()
 
+        if (window.location.pathname.includes("my-watchlist.html")) {
+            location.reload()
+        }
+        else {
+            renderMovies()
+        }
     }
 }
 
@@ -93,11 +97,38 @@ function searchMovie(e) {
 // Funktion för att rendera filmerna i sökresultatet.
 function renderMovies() {
     let searchHtml = "";
-    for (let movie of moviesArray) {
-        const details = movie.details;
 
-        // Skapar HTML för varje film och lägger till den i sökresultatet.
-        searchHtml += `
+    if (moviesArray.length === 0) {
+        // Display the message when the watchlist is empty
+        searchHtml = `
+        <div class="empty-list">
+        <h3>Unable to find what you’re looking for. 
+        <br>
+        Please try another search.</h3>
+    </div>
+        `;
+    } else {
+        // Render each movie in the watchlist
+        for (let movie of moviesArray) {
+            const details = movie.details
+
+            const isInWatchlist = addedFilmArray.some((addedMovie) => addedMovie.imdbID === movie.imdbID)
+            let buttonContent = "Watchlist"
+            let icon = "fa-solid fa-circle-plus"
+            let id = "add"
+
+            if (isInWatchlist) {
+                buttonContent = "Remove"
+                icon = "fa-solid fa-circle-minus"
+                id = "remove"
+            } else {
+                buttonContent = "Watchlist"
+                icon = "fa-solid fa-circle-plus"
+                id = "add"
+            }
+
+            // Skapar HTML för varje film och lägger till den i sökresultatet.
+            searchHtml += `
         <main class="movie">
             <!-- Filmens posterbild -->
             <div>
@@ -112,8 +143,8 @@ function renderMovies() {
                     <p>${details.Runtime}</p>
                     <p>${details.Genre}</p>
                     <div class="watchlist-btn">
-                        <i class="fa-solid fa-circle-plus" data-add="${movie.imdbID}"></i>
-                        <p data-add="${movie.imdbID}">Watchlist</p>
+                        <i class="${icon}" data-${id}="${movie.imdbID}"></i>
+                        <p data-${id}="${movie.imdbID}">${buttonContent}</p>
                     </div>
                 </div>
                 <p>${details.Plot}</p>
@@ -121,13 +152,15 @@ function renderMovies() {
         </main>
         <hr>
         `;
+        }
+
+        // Uppdaterar innehållet i filmcontainer med HTML för de hittade filmerna.
+        const movieContainer = document.getElementById("movie-container");
+        if (movieContainer) {
+            movieContainer.innerHTML = searchHtml;
+        }
     }
 
-    // Uppdaterar innehållet i filmcontainer med HTML för de hittade filmerna.
-    const movieContainer = document.getElementById("movie-container");
-    if (movieContainer) {
-        movieContainer.innerHTML = searchHtml;
-    }
 }
 
 // Funktion för att rendera filmerna i watchlist.
@@ -140,7 +173,7 @@ function renderWatchlist() {
         watchListHtml = `
             <div class="empty-list">
                 <h3>Your watchlist is looking a little empty...</h3>
-                <div>
+                <div class="watchlist-btn" onclick="window.location.href = 'find-your-film.html'">
                     <i class="fa-solid fa-circle-plus"></i>
                     <p>Let’s add some movies!</p>
                 </div>
