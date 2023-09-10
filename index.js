@@ -173,7 +173,7 @@ function renderWatchlist() {
         watchListHtml = `
             <div class="empty-list">
                 <h3>Your watchlist is looking a little empty...</h3>
-                <div class="watchlist-btn" onclick="window.location.href = 'find-your-film.html'">
+                <div class="watchlist-btn" onclick="window.location.href = 'index.html'">
                     <i class="fa-solid fa-circle-plus"></i>
                     <p>Let’s add some movies!</p>
                 </div>
