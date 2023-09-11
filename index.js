@@ -224,3 +224,4 @@ function renderWatchlist() {
         watchlistContainer.innerHTML = watchListHtml;
     }
 }
+
